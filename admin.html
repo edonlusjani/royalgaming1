@@ -41,6 +41,13 @@
             color: #ffffff;
         }
 
+        #loading {
+            text-align: center;
+            margin: 20px;
+            color: #00ffcc;
+            display: none;
+        }
+
         table {
             width: 90%;
             margin: 20px auto;
@@ -74,15 +81,6 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-        }
-
-        .edit {
-            background-color: #007fff;
-            color: #fff;
-        }
-
-        .edit:hover {
-            background-color: #0057cc;
         }
 
         .approve {
@@ -131,6 +129,8 @@
         <input type="text" id="searchBar" placeholder="Search by name or status..." onkeyup="filterTable()">
     </div>
 
+    <div id="loading">Loading...</div>
+
     <table id="bookingTable">
         <thead>
             <tr>
@@ -154,14 +154,23 @@
     </footer>
 
     <script>
-        const bookings = []; // Placeholder for bookings fetched from backend
+        const backendUrl = 'https://royalgaming1-1.onrender.com'; // Backend URL
+        const bookings = []; // Placeholder for bookings fetched from the backend
 
         // Fetch bookings from the backend
         async function fetchBookings() {
-            const response = await fetch('http://localhost:3000/bookings');
-            const data = await response.json();
-            bookings.splice(0, bookings.length, ...data); // Update bookings array
-            renderTable(bookings);
+            document.getElementById('loading').style.display = 'block';
+            try {
+                const response = await fetch(`${backendUrl}/bookings`);
+                const data = await response.json();
+                bookings.splice(0, bookings.length, ...data); // Update bookings array
+                renderTable(bookings);
+            } catch (error) {
+                alert('Error fetching bookings. Please try again.');
+                console.error(error);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
         }
 
         // Render bookings table
@@ -175,11 +184,11 @@
                     <td contenteditable="true" onblur="updateBooking(${booking.id}, 'name', this.textContent)">${booking.name}</td>
                     <td contenteditable="true" onblur="updateBooking(${booking.id}, 'phone', this.textContent)">${booking.phone}</td>
                     <td contenteditable="true" onblur="updateBooking(${booking.id}, 'email', this.textContent)">${booking.email}</td>
-                    <td contenteditable="true" onblur="updateBooking(${booking.id}, 'pcs', this.textContent)">${booking.pcs.join(', ')}</td>
-                    <td contenteditable="true" onblur="updateBooking(${booking.id}, 'date', this.textContent)">${booking.date}</td>
-                    <td contenteditable="true" onblur="updateBooking(${booking.id}, 'startTime', this.textContent)">${booking.startTime}</td>
-                    <td contenteditable="true" onblur="updateBooking(${booking.id}, 'duration', this.textContent)">${booking.duration}</td>
-                    <td contenteditable="true" onblur="updateBooking(${booking.id}, 'status', this.textContent)">${booking.status}</td>
+                    <td contenteditable="true" onblur="validateAndUpdatePCs(${booking.id}, this.textContent)">${booking.pcs.join(', ')}</td>
+                    <td>${booking.date}</td>
+                    <td>${booking.startTime}</td>
+                    <td>${booking.duration}</td>
+                    <td>${booking.status}</td>
                     <td>
                         <button class="approve" onclick="approveBooking(${booking.id})">Approve</button>
                         <button class="reject" onclick="rejectBooking(${booking.id})">Reject</button>
@@ -190,42 +199,73 @@
             });
         }
 
-        // Filter bookings by name or status
-        function filterTable() {
-            const query = document.getElementById('searchBar').value.toLowerCase();
-            const filtered = bookings.filter(booking => 
-                booking.name.toLowerCase().includes(query) || 
-                booking.status.toLowerCase().includes(query)
-            );
-            renderTable(filtered);
+        // Validate and update PCs field
+        async function validateAndUpdatePCs(id, value) {
+            const pcs = value.split(',').map(pc => pc.trim()).map(Number);
+            if (pcs.some(isNaN) || pcs.some(pc => pc < 1 || pc > 25)) {
+                alert('Invalid PCs. Please enter valid numbers (1-25).');
+                fetchBookings(); // Revert changes
+                return;
+            }
+            updateBooking(id, 'pcs', pcs);
         }
 
         // Update booking on blur
         async function updateBooking(id, field, value) {
-            await fetch(`http://localhost:3000/bookings/${id}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ [field]: value }),
-            });
-            fetchBookings();
+            try {
+                await fetch(`${backendUrl}/bookings/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ [field]: value }),
+                });
+                fetchBookings();
+            } catch (error) {
+                alert('Error updating booking. Please try again.');
+                console.error(error);
+            }
         }
 
         // Approve booking
         async function approveBooking(id) {
-            await fetch(`http://localhost:3000/bookings/${id}/approve`, { method: 'PUT' });
-            fetchBookings();
+            try {
+                await fetch(`${backendUrl}/bookings/${id}/approve`, { method: 'PUT' });
+                fetchBookings();
+            } catch (error) {
+                alert('Error approving booking.');
+                console.error(error);
+            }
         }
 
         // Reject booking
         async function rejectBooking(id) {
-            await fetch(`http://localhost:3000/bookings/${id}/reject`, { method: 'PUT' });
-            fetchBookings();
+            try {
+                await fetch(`${backendUrl}/bookings/${id}/reject`, { method: 'PUT' });
+                fetchBookings();
+            } catch (error) {
+                alert('Error rejecting booking.');
+                console.error(error);
+            }
         }
 
         // Delete booking
         async function deleteBooking(id) {
-            await fetch(`http://localhost:3000/bookings/${id}`, { method: 'DELETE' });
-            fetchBookings();
+            try {
+                await fetch(`${backendUrl}/bookings/${id}`, { method: 'DELETE' });
+                fetchBookings();
+            } catch (error) {
+                alert('Error deleting booking.');
+                console.error(error);
+            }
+        }
+
+        // Filter bookings by name or status
+        function filterTable() {
+            const query = document.getElementById('searchBar').value.toLowerCase();
+            const filtered = bookings.filter(booking =>
+                booking.name.toLowerCase().includes(query) ||
+                booking.status.toLowerCase().includes(query)
+            );
+            renderTable(filtered);
         }
 
         // Initialize
