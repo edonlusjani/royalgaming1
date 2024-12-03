@@ -235,13 +235,7 @@
         <button onclick="showAdminModal()">Admin Panel</button>
     </div>
 
-    <div class="modal" id="adminModal">
-        <div class="modal-content">
-            <h2>Admin Login</h2>
-            <input type="password" id="adminPassword" placeholder="Enter Admin Password">
-            <button onclick="validateAdmin()">Login</button>
-        </div>
-    </div>
+    
 
     <footer>
         <p>&copy; 2024 RoyalGaming. All Rights Reserved. Made by Edon Lusjani</p>
@@ -314,16 +308,7 @@
             document.getElementById('adminModal').style.display = 'flex';
         }
 
-        // Validate Admin Password
-        async function validateAdmin() {
-            const password = document.getElementById('adminPassword').value;
-
-            try {
-                const response = await fetch('https://royalgaming1-1.onrender.com/admin/config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password }),
-                });
+        
 
                 const result = await response.json();
                 if (result.success) {
