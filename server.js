@@ -100,3 +100,16 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+// Admin Login Endpoint
+app.post('/admin/config', (req, res) => {
+    const { password } = req.body; // Extract password from request body
+    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123'; // Admin password (from environment or default)
+
+    // Validate password
+    if (password === adminPassword) {
+        res.json({ success: true }); // Respond with success if password is correct
+    } else {
+        res.status(401).json({ success: false, message: 'Invalid password' }); // Respond with error if incorrect
+    }
+});
+
