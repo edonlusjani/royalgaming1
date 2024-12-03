@@ -272,22 +272,26 @@
                 return;
             }
 
-            const response = await fetch('https://royalgaming1-1.onrender.com', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    name,
-                    phone,
-                    email,
-                    date,
-                    startTime,
-                    duration,
-                    pcs: Array.from(selectedPCs),
-                }),
-            });
+            try {
+                const response = await fetch('https://royalgaming1-1.onrender.com/book', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        name,
+                        phone,
+                        email,
+                        date,
+                        startTime,
+                        duration,
+                        pcs: Array.from(selectedPCs),
+                    }),
+                });
 
-            const result = await response.json();
-            document.getElementById('bookingMessage').innerText = result.message;
+                const result = await response.json();
+                document.getElementById('bookingMessage').innerText = result.message;
+            } catch (error) {
+                alert('An error occurred while booking. Please try again.');
+            }
         });
 
         // Show Admin Modal
@@ -298,12 +302,22 @@
         // Validate Admin Password
         async function validateAdmin() {
             const password = document.getElementById('adminPassword').value;
-            const response = await fetch('http://localhost:3000/admin-config');
-            const config = await response.json();
-            if (config.password === password) {
-                window.location.href = 'admin.html'; // Ensure admin.html is in the same directory
-            } else {
-                alert('Incorrect password!');
+
+            try {
+                const response = await fetch('https://royalgaming1-1.onrender.com/admin/config', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password }),
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    window.location.href = 'admin.html'; // Ensure admin.html is in the same directory
+                } else {
+                    alert('Incorrect password!');
+                }
+            } catch (error) {
+                alert('Error validating admin credentials.');
             }
         }
 
