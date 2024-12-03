@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RoyalGaming Booking</title>
+    <style>
+        /* Global Styling */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(145deg, #121212, #1e1e1e);
+            color: #ffffff;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background: radial-gradient(circle, #232323, #0d0d0d);
+            box-shadow: 0 0 20px #00bfff;
+        }
+
+        header img {
+            width: 150px;
+            height: auto;
+            border-radius: 50%;
+            border: 3px solid #00bfff;
+            box-shadow: 0 0 15px #00bfff;
+        }
+
+        header h1 {
+            font-size: 2.8em;
+            color: #00bfff;
+            margin: 10px 0;
+        }
+
+        header p {
+            font-size: 1.2em;
+            color: #cccccc;
+        }
+
+        .pc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .pc {
+            background: #1a1a1a;
+            border: 3px solid #00bfff;
+            border-radius: 10px;
+            color: #ffffff;
+            text-align: center;
+            padding: 20px;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .pc:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 15px #00ff00;
+            background: linear-gradient(145deg, #2a2a2a, #1f1f1f);
+        }
+
+        .pc.selected {
+            border-color: #ff6600;
+            box-shadow: 0 0 15px #ff6600;
+            background: linear-gradient(145deg, #442222, #331111);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+            padding: 20px;
+            width: 80%;
+            max-width: 600px;
+            background: linear-gradient(145deg, #252525, #1a1a1a);
+            border-radius: 15px;
+            box-shadow: 0 0 20px #00bfff;
+        }
+
+        form label {
+            margin-top: 15px;
+            font-size: 1.2em;
+            color: #00bfff;
+        }
+
+        form input, form select, form button {
+            margin-top: 10px;
+            padding: 10px;
+            font-size: 1em;
+            width: 90%;
+            max-width: 400px;
+            border: 2px solid #00bfff;
+            border-radius: 5px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        form button {
+            margin-top: 20px;
+            background: linear-gradient(145deg, #00bfff, #0077cc);
+            color: #ffffff;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 10px #00bfff;
+        }
+
+        .admin-button {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .admin-button button {
+            padding: 10px 20px;
+            background: #ff6600;
+            color: #000;
+            border: none;
+            cursor: pointer;
+            font-size: 1.2em;
+            border-radius: 5px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            background: radial-gradient(circle, #232323, #0d0d0d);
+            color: #ffffff;
+            margin-top: 30px;
+            box-shadow: 0 0 10px #00bfff;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px #00ff00;
+            text-align: center;
+            width: 300px;
+        }
+
+        .modal-content input {
+            width: 90%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #00ff00;
+            border-radius: 5px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+        }
+
+        .modal-content button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background: #00ff00;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="RG logo.jpg" alt="RoyalGaming Logo">
+        <h1>RoyalGaming</h1>
+        <p>Book your ultimate gaming session!</p>
+    </header>
+
+    <div class="pc-grid" id="pcGrid"></div>
+
+    <form id="bookingForm">
+        <label for="name">Name:</label>
+        <input type="text" id="name" required>
+
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" placeholder="e.g., +1234567890" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="e.g., name@example.com" required>
+
+        <label for="date">Select Date:</label>
+        <input type="date" id="date" required>
+
+        <label for="startTime">Start Time:</label>
+        <input type="time" id="startTime" required>
+
+        <label for="duration">Duration (hours):</label>
+        <select id="duration" required>
+            <option value="1">1 Hour</option>
+            <option value="2">2 Hours</option>
+            <option value="3">3 Hours</option>
+            <option value="4">4 Hours</option>
+            <option value="5">5 Hours</option>
+        </select>
+
+        <button type="submit">Submit Booking</button>
+        <p id="bookingMessage"></p>
+    </form>
+
+    <div class="admin-button">
+        <button onclick="showAdminModal()">Admin Panel</button>
+    </div>
+
+    <div class="modal" id="adminModal">
+        <div class="modal-content">
+            <h2>Admin Login</h2>
+            <input type="password" id="adminPassword" placeholder="Enter Admin Password">
+            <button onclick="validateAdmin()">Login</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 RoyalGaming. All Rights Reserved.</p>
+    </footer>
+
+    <script>
+        const pcGrid = document.getElementById('pcGrid');
+        const selectedPCs = new Set();
+
+        // Generate 25 PC icons
+        for (let i = 1; i <= 25; i++) {
+            const pc = document.createElement('div');
+            pc.classList.add('pc');
+            pc.textContent = `PC ${i}`;
+            pc.dataset.id = i;
+
+            pc.addEventListener('click', () => {
+                if (selectedPCs.has(i)) {
+                    selectedPCs.delete(i);
+                    pc.classList.remove('selected');
+                } else {
+                    selectedPCs.add(i);
+                    pc.classList.add('selected');
+                }
+            });
+
+            pcGrid.appendChild(pc);
+        }
+
+        // Submit booking form
+        document.getElementById('bookingForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const email = document.getElementById('email').value;
+            const date = document.getElementById('date').value;
+            const startTime = document.getElementById('startTime').value;
+            const duration = document.getElementById('duration').value;
+
+            if (selectedPCs.size === 0) {
+                alert('Please select at least one PC.');
+                return;
+            }
+
+            const response = await fetch('http://localhost:3000/book', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name,
+                    phone,
+                    email,
+                    date,
+                    startTime,
+                    duration,
+                    pcs: Array.from(selectedPCs),
+                }),
+            });
+
+            const result = await response.json();
+            document.getElementById('bookingMessage').innerText = result.message;
+        });
+
+        // Show Admin Modal
+        function showAdminModal() {
+            document.getElementById('adminModal').style.display = 'flex';
+        }
+
+        // Validate Admin Password
+        async function validateAdmin() {
+            const password = document.getElementById('adminPassword').value;
+            const response = await fetch('http://localhost:3000/admin-config');
+            const config = await response.json();
+            if (config.password === password) {
+                window.location.href = 'admin.html'; // Ensure admin.html is in the same directory
+            } else {
+                alert('Incorrect password!');
+            }
+        }
+
+        // Close modal on outside click
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('adminModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
