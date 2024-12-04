@@ -184,6 +184,34 @@
           display: inline-block;
           cursor: pointer;
         }
+        .about-pcs-button {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .about-pcs-button:hover {
+            background-color: #0056b3;
+        }
+
+        .about-pcs-text {
+            display: none;
+            margin-top: 20px;
+            font-size: 18px;
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        .about-pcs-text.active {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -228,6 +256,7 @@
         </select>
 
         <button type="submit">Submit Booking</button>
+        <button class="about-pcs-button" onclick="togglePCInfo()">About PCs</button>
         <p id="bookingMessage"></p>
     </form>
 
