@@ -176,14 +176,7 @@
             font-size: 1em;
             border-radius: 5px;
         }
-        .instagram-button {
-          width: 50px; /* Set the size of the button */
-          height: 50px;
-          border-radius: 50%; /* Makes the image circular */
-          overflow: hidden;
-          display: inline-block;
-          cursor: pointer;
-        }
+
         .about-pcs-button {
             padding: 10px 20px;
             background-color: #007bff;
@@ -216,14 +209,10 @@
 </head>
 <body>
     <header>
-        <img src="RG logo.jpg" alt="RoyalGaming Logo">
-       
-    <a href="https://www.instagram.com/royalgaming1__/" target="_blank" class="instagram-button">
-    <img src="insta.webp" alt="Instagram" style="width:50px; height:50px;">
-</a>
-
- 
-        
+        <img src="RG_logo.jpg" alt="RoyalGaming Logo">
+        <a href="https://www.instagram.com/royalgaming1__/" target="_blank" class="instagram-button">
+            <img src="insta.webp" alt="Instagram" style="width:50px; height:50px;">
+        </a>
         <h1>RoyalGaming</h1>
         <p>Book your ultimate gaming session!</p>
     </header>
@@ -256,9 +245,13 @@
         </select>
 
         <button type="submit">Submit Booking</button>
-        <button class="about-pcs-button" onclick="togglePCInfo()">About PCs</button>
+        <button type="button" class="about-pcs-button" onclick="togglePCInfo()">About PCs</button>
         <p id="bookingMessage"></p>
     </form>
+
+    <div class="about-pcs-text">
+        Our PCs feature high-performance gaming rigs with the latest GPUs, ample RAM, and custom cooling systems. Enjoy a seamless experience in our state-of-the-art gaming rooms!
+    </div>
 
     <div class="admin-button">
         <button onclick="showAdminModal()">Admin Panel</button>
@@ -266,6 +259,7 @@
 
     <div class="modal" id="adminModal">
         <div class="modal-content">
+            <span style="float: right; cursor: pointer; color: #ffffff;" onclick="document.getElementById('adminModal').style.display='none';">X</span>
             <h2>Admin Login</h2>
             <input type="password" id="adminPassword" placeholder="Enter Admin Password">
             <button onclick="validateAdmin()">Login</button>
@@ -278,100 +272,46 @@
 
     <script>
         const pcGrid = document.getElementById('pcGrid');
-        const selectedPCs = new Set();
+        const selectedPCs = [];
 
-        // Generate 25 PC icons
+        // Generate PCs dynamically
         for (let i = 1; i <= 25; i++) {
             const pc = document.createElement('div');
-            pc.classList.add('pc');
+            pc.className = 'pc';
             pc.textContent = `PC ${i}`;
-            pc.dataset.id = i;
-
-            pc.addEventListener('click', () => {
-                if (selectedPCs.has(i)) {
-                    selectedPCs.delete(i);
-                    pc.classList.remove('selected');
-                } else {
-                    selectedPCs.add(i);
-                    pc.classList.add('selected');
-                }
-            });
-
+            pc.addEventListener('click', () => togglePCSelection(pc, i));
             pcGrid.appendChild(pc);
         }
 
-        // Submit booking form
-        document.getElementById('bookingForm').addEventListener('submit', async function(event) {
-            event.preventDefault();
-
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            const email = document.getElementById('email').value;
-            const date = document.getElementById('date').value;
-            const startTime = document.getElementById('startTime').value;
-            const duration = document.getElementById('duration').value;
-
-            if (selectedPCs.size === 0) {
-                alert('Please select at least one PC.');
-                return;
+        function togglePCSelection(pc, pcNumber) {
+            if (selectedPCs.includes(pcNumber)) {
+                selectedPCs.splice(selectedPCs.indexOf(pcNumber), 1);
+                pc.classList.remove('selected');
+            } else {
+                selectedPCs.push(pcNumber);
+                pc.classList.add('selected');
             }
+        }
 
-            try {
-                const response = await fetch('https://royalgaming1-1.onrender.com/book', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        name,
-                        phone,
-                        email,
-                        date,
-                        startTime,
-                        duration,
-                        pcs: Array.from(selectedPCs),
-                    }),
-                });
-
-                const result = await response.json();
-                document.getElementById('bookingMessage').innerText = result.message;
-            } catch (error) {
-                alert('An error occurred while booking. Please try again.');
-            }
-        });
-
-        // Show Admin Modal
         function showAdminModal() {
             document.getElementById('adminModal').style.display = 'flex';
         }
 
-        // Validate Admin Password
         async function validateAdmin() {
-            const password = document.getElementById('adminPassword').value;
+            const adminPassword = document.getElementById('adminPassword').value;
 
-            try {
-                const response = await fetch('https://royalgaming1-1.onrender.com/admin/config', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password }),
-                });
-
-                const result = await response.json();
-                if (result.success) {
-                    window.location.href = 'admin.html'; // Ensure admin.html is in the same directory
-                } else {
-                    alert('Incorrect password!');
-                }
-            } catch (error) {
-                alert('Error validating admin credentials.');
+            // Mock validation, replace with real API call
+            if (adminPassword === "admin123") {
+                alert("Admin logged in successfully!");
+                document.getElementById('adminModal').style.display = 'none';
+            } else {
+                alert("Invalid admin password!");
             }
         }
 
-        // Close modal on outside click
-        window.addEventListener('click', (event) => {
-            const modal = document.getElementById('adminModal');
-            if (event.target === modal) {
-                modal.style.display = 'none';
-            }
-        });
+        async function togglePCInfo() {
+            document.querySelector(".about-pcs-text").classList.toggle("active");
+        }
     </script>
 </body>
 </html>
