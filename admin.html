@@ -26,8 +26,7 @@
         }
 
         .login-form, .admin-content {
-            display: none;
-            /* Initially hide admin content and login form */
+            display: none; /* Initially hide admin content and login form */
         }
 
         .login-form {
@@ -60,91 +59,6 @@
             background-color: #007f7f;
         }
 
-        .search-bar {
-            display: flex;
-            justify-content: center;
-            margin: 20px;
-        }
-
-        .search-bar input {
-            padding: 10px;
-            font-size: 1em;
-            width: 300px;
-            border: 2px solid #00ffcc;
-            border-radius: 5px;
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-
-        #loading {
-            text-align: center;
-            margin: 20px;
-            color: #00ffcc;
-            display: none;
-        }
-
-        table {
-            width: 90%;
-            margin: 20px auto;
-            border-collapse: collapse;
-            background: #1a1a1a;
-            color: #ffffff;
-            box-shadow: 0 0 15px #00ffcc;
-        }
-
-        th, td {
-            padding: 10px;
-            text-align: center;
-            border: 1px solid #00ffcc;
-        }
-
-        th {
-            background: linear-gradient(145deg, #00ffcc, #007f7f);
-            color: #000;
-            font-size: 1.2em;
-        }
-
-        td {
-            font-size: 1em;
-        }
-
-        td button {
-            padding: 5px 10px;
-            margin: 5px;
-            font-size: 1em;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .approve {
-            background-color: #00ffcc;
-            color: #000;
-        }
-
-        .approve:hover {
-            background-color: #007f7f;
-        }
-
-        .reject {
-            background-color: #ff6600;
-            color: #000;
-        }
-
-        .reject:hover {
-            background-color: #ff4500;
-        }
-
-        .delete {
-            background-color: #ff3333;
-            color: #fff;
-        }
-
-        .delete:hover {
-            background-color: #cc0000;
-        }
-
         footer {
             text-align: center;
             padding: 15px;
@@ -170,29 +84,8 @@
 
     <!-- Admin Content (Hidden initially) -->
     <div class="admin-content" id="adminContent">
-        <div class="search-bar">
-            <input type="text" id="searchBar" placeholder="Search by name or status..." onkeyup="filterTable()">
-        </div>
-
-        <div id="loading">Loading...</div>
-
-        <table id="bookingTable">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Phone</th>
-                    <th>Email</th>
-                    <th>PCs</th>
-                    <th>Date</th>
-                    <th>Start Time</th>
-                    <th>Duration</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
+        <h2>Welcome to the Admin Panel!</h2>
+        <!-- Your admin content goes here -->
     </div>
 
     <footer>
@@ -200,20 +93,16 @@
     </footer>
 
     <script>
-        const backendUrl = 'https://royalgaming1.onrender.com'; // Backend URL
-        const bookings = []; // Placeholder for bookings fetched from the backend
-
         // Function to validate the admin password
         function validateAdminPassword() {
             const enteredPassword = document.getElementById('adminPassword').value;
-            const correctPassword = 'admin123'; // Replace with your actual password or validation method
+            const correctPassword = 'admin123'; // Correct password for testing
 
             if (enteredPassword === correctPassword) {
                 // Hide login form and show admin content
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
                 localStorage.setItem('isAdminLoggedIn', 'true'); // Optional: Use to keep track of login state
-                fetchBookings(); // Fetch bookings after successful login
             } else {
                 document.getElementById('errorMessage').textContent = 'Incorrect password. Please try again.';
             }
@@ -223,118 +112,6 @@
         if (localStorage.getItem('isAdminLoggedIn') === 'true') {
             document.getElementById('loginForm').style.display = 'none';
             document.getElementById('adminContent').style.display = 'block';
-            fetchBookings(); // Fetch bookings if logged in already
-        }
-
-        // Fetch bookings from the backend
-        async function fetchBookings() {
-            document.getElementById('loading').style.display = 'block';
-            try {
-                const response = await fetch(`${backendUrl}/bookings`);
-                const data = await response.json();
-                bookings.splice(0, bookings.length, ...data); // Update bookings array
-                renderTable(bookings);
-            } catch (error) {
-                alert('Error fetching bookings. Please try again.');
-                console.error(error);
-            } finally {
-                document.getElementById('loading').style.display = 'none';
-            }
-        }
-
-        // Render bookings table
-        function renderTable(data) {
-            const tbody = document.querySelector('#bookingTable tbody');
-            tbody.innerHTML = '';
-            data.forEach(booking => {
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${booking.id}</td>
-                    <td contenteditable="true" onblur="updateBooking(${booking.id}, 'name', this.textContent)">${booking.name}</td>
-                    <td contenteditable="true" onblur="updateBooking(${booking.id}, 'phone', this.textContent)">${booking.phone}</td>
-                    <td contenteditable="true" onblur="updateBooking(${booking.id}, 'email', this.textContent)">${booking.email}</td>
-                    <td contenteditable="true" onblur="validateAndUpdatePCs(${booking.id}, this.textContent)">${booking.pcs.join(', ')}</td>
-                    <td>${booking.date}</td>
-                    <td>${booking.startTime}</td>
-                    <td>${booking.duration}</td>
-                    <td>${booking.status}</td>
-                    <td>
-                        <button class="approve" onclick="approveBooking(${booking.id})">Approve</button>
-                        <button class="reject" onclick="rejectBooking(${booking.id})">Reject</button>
-                        <button class="delete" onclick="deleteBooking(${booking.id})">Delete</button>
-                    </td>
-                `;
-                tbody.appendChild(row);
-            });
-        }
-
-        // Validate and update PCs field
-        async function validateAndUpdatePCs(id, value) {
-            const pcs = value.split(',').map(pc => pc.trim()).map(Number);
-            if (pcs.some(isNaN) || pcs.some(pc => pc < 1 || pc > 25)) {
-                alert('Invalid PCs. Please enter valid numbers (1-25).');
-                fetchBookings(); // Revert changes
-                return;
-            }
-            updateBooking(id, 'pcs', pcs);
-        }
-
-        // Update booking on blur
-        async function updateBooking(id, field, value) {
-            try {
-                await fetch(`${backendUrl}/bookings/${id}`, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ [field]: value }),
-                });
-                fetchBookings();
-            } catch (error) {
-                alert('Error updating booking. Please try again.');
-                console.error(error);
-            }
-        }
-
-        // Approve booking
-        async function approveBooking(id) {
-            try {
-                await fetch(`${backendUrl}/bookings/${id}/approve`, { method: 'PUT' });
-                fetchBookings();
-            } catch (error) {
-                alert('Error approving booking.');
-                console.error(error);
-            }
-        }
-
-        // Reject booking
-        async function rejectBooking(id) {
-            try {
-                await fetch(`${backendUrl}/bookings/${id}/reject`, { method: 'PUT' });
-                fetchBookings();
-            } catch (error) {
-                alert('Error rejecting booking.');
-                console.error(error);
-            }
-        }
-
-        // Delete booking
-        async function deleteBooking(id) {
-            try {
-                await fetch(`${backendUrl}/bookings/${id}`, { method: 'DELETE' });
-                fetchBookings();
-            } catch (error) {
-                alert('Error deleting booking.');
-                console.error(error);
-            }
-        }
-
-        // Filter bookings by name or status
-        function filterTable() {
-            const query = document.getElementById('searchBar').value.toLowerCase();
-            const filtered = bookings.filter(booking =>
-                booking.name.toLowerCase().includes(query) ||
-                booking.status.toLowerCase().includes(query)
-            );
-            renderTable(filtered);
         }
     </script>
 </body>
