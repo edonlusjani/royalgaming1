@@ -25,6 +25,41 @@
             color: #00ffcc;
         }
 
+        .login-form, .admin-content {
+            display: none;
+            /* Initially hide admin content and login form */
+        }
+
+        .login-form {
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .login-form input {
+            padding: 10px;
+            font-size: 1em;
+            width: 300px;
+            border: 2px solid #00ffcc;
+            border-radius: 5px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 10px 0;
+        }
+
+        .login-form button {
+            padding: 10px;
+            font-size: 1em;
+            background-color: #00ffcc;
+            border: none;
+            border-radius: 5px;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .login-form button:hover {
+            background-color: #007f7f;
+        }
+
         .search-bar {
             display: flex;
             justify-content: center;
@@ -124,32 +159,41 @@
     <header>
         <h1>RoyalGaming Admin Panel</h1>
     </header>
-    
-    
 
-    <div class="search-bar">
-        <input type="text" id="searchBar" placeholder="Search by name or status..." onkeyup="filterTable()">
+    <!-- Login Form -->
+    <div class="login-form" id="loginForm">
+        <h2>Admin Login</h2>
+        <input type="password" id="adminPassword" placeholder="Enter password" />
+        <button onclick="validateAdminPassword()">Login</button>
+        <p id="errorMessage" style="color: red;"></p>
     </div>
 
-    <div id="loading">Loading...</div>
+    <!-- Admin Content (Hidden initially) -->
+    <div class="admin-content" id="adminContent">
+        <div class="search-bar">
+            <input type="text" id="searchBar" placeholder="Search by name or status..." onkeyup="filterTable()">
+        </div>
 
-    <table id="bookingTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Phone</th>
-                <th>Email</th>
-                <th>PCs</th>
-                <th>Date</th>
-                <th>Start Time</th>
-                <th>Duration</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+        <div id="loading">Loading...</div>
+
+        <table id="bookingTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>PCs</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 
     <footer>
         <p>&copy; 2024 RoyalGaming. Admin Panel.</p>
@@ -158,6 +202,29 @@
     <script>
         const backendUrl = 'https://royalgaming1-1.onrender.com'; // Backend URL
         const bookings = []; // Placeholder for bookings fetched from the backend
+
+        // Function to validate the admin password
+        function validateAdminPassword() {
+            const enteredPassword = document.getElementById('adminPassword').value;
+            const correctPassword = 'admin123'; // Replace with your actual password or validation method
+
+            if (enteredPassword === correctPassword) {
+                // Hide login form and show admin content
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                localStorage.setItem('isAdminLoggedIn', 'true'); // Optional: Use to keep track of login state
+                fetchBookings(); // Fetch bookings after successful login
+            } else {
+                document.getElementById('errorMessage').textContent = 'Incorrect password. Please try again.';
+            }
+        }
+
+        // Check if the user is already logged in (using localStorage)
+        if (localStorage.getItem('isAdminLoggedIn') === 'true') {
+            document.getElementById('loginForm').style.display = 'none';
+            document.getElementById('adminContent').style.display = 'block';
+            fetchBookings(); // Fetch bookings if logged in already
+        }
 
         // Fetch bookings from the backend
         async function fetchBookings() {
@@ -210,10 +277,6 @@
                 return;
             }
             updateBooking(id, 'pcs', pcs);
-        }
-
-        function showAdminModal() {
-            document.getElementById('adminModal').style.display = 'flex';
         }
 
         // Update booking on blur
@@ -273,9 +336,6 @@
             );
             renderTable(filtered);
         }
-
-        // Initialize
-        fetchBookings();
     </script>
 </body>
 </html>
