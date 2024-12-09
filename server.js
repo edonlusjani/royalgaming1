@@ -63,8 +63,7 @@ app.put('/bookings/:id/approve', (req, res) => {
         from: process.env.EMAIL_USER,
         to: booking.email,
         subject: 'Booking Approved - RoyalGaming',
-        text: `Hello ${booking.name},\n\nYour booking for PCs ${booking.pcs.join(', ')} on ${booking.date} at ${booking.startTime} for ${booking.duration} hour(s) has been approved.\n\nThank you for choosing RoyalGaming!`,
-        text: `Pershendetje ${booking.name},\n\nRezervimi juaj per pc ${booking.pcs.join(', ')} ne ${booking.date} prej ${booking.startTime} per ${booking.duration} ore eshte aprovuar.\n\nFaleminderit qe zgjodhet  RoyalGaming!`,
+        text: `Hello ${booking.name},\n\nYour booking for PCs ${booking.pcs.join(', ')} on ${booking.date} at ${booking.startTime} for ${booking.duration} hour(s) has been approved.\n\nThank you for choosing RoyalGaming! \n\n Pershendetje ${booking.name},\n\nRezervimi juaj per pc ${booking.pcs.join(', ')} ne ${booking.date} prej ${booking.startTime} per ${booking.duration} ore eshte aprovuar.\n\nFaleminderit qe zgjodhet  RoyalGaming!`,
         
 
     transporter.sendMail(mailOptions, (error) => {
