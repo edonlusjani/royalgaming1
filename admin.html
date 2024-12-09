@@ -78,7 +78,7 @@
     <div class="login-form" id="loginForm">
         <h2>Admin Login</h2>
         <input type="password" id="adminPassword" placeholder="Enter password" />
-        <button onclick="validateAdminPassword()">Login</button>
+        <button id="loginButton">Login</button>
         <p id="errorMessage" style="color: red;"></p>
     </div>
 
@@ -93,26 +93,39 @@
     </footer>
 
     <script>
-        // Function to validate the admin password
-        function validateAdminPassword() {
-            const enteredPassword = document.getElementById('adminPassword').value;
-            const correctPassword = 'admin123'; // Correct password for testing
+        // Wait for the document to fully load
+        document.addEventListener('DOMContentLoaded', function () {
 
-            if (enteredPassword === correctPassword) {
-                // Hide login form and show admin content
+            // Function to validate the admin password
+            function validateAdminPassword() {
+                const enteredPassword = document.getElementById('adminPassword').value;
+                const correctPassword = 'admin123'; // Correct password for testing
+
+                if (enteredPassword === correctPassword) {
+                    // Hide login form and show admin content
+                    document.getElementById('loginForm').style.display = 'none';
+                    document.getElementById('adminContent').style.display = 'block';
+                    localStorage.setItem('isAdminLoggedIn', 'true'); // Optional: Use to keep track of login state
+                } else {
+                    document.getElementById('errorMessage').textContent = 'Incorrect password. Please try again.';
+                }
+            }
+
+            // Add event listener to the login button
+            document.getElementById('loginButton').addEventListener('click', function () {
+                validateAdminPassword();
+            });
+
+            // Check if the user is already logged in (using localStorage)
+            if (localStorage.getItem('isAdminLoggedIn') === 'true') {
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
-                localStorage.setItem('isAdminLoggedIn', 'true'); // Optional: Use to keep track of login state
             } else {
-                document.getElementById('errorMessage').textContent = 'Incorrect password. Please try again.';
+                // If not logged in, show the login form
+                document.getElementById('loginForm').style.display = 'block';
             }
-        }
 
-        // Check if the user is already logged in (using localStorage)
-        if (localStorage.getItem('isAdminLoggedIn') === 'true') {
-            document.getElementById('loginForm').style.display = 'none';
-            document.getElementById('adminContent').style.display = 'block';
-        }
+        });
     </script>
 </body>
 </html>
