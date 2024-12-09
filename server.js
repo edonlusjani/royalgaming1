@@ -112,4 +112,3 @@ app.post('/admin/config', (req, res) => {
         res.status(401).json({ success: false, message: 'Invalid password' }); // Respond with error if incorrect
     }
 });
-
