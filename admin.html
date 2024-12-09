@@ -124,6 +124,7 @@
     <header>
         <h1>RoyalGaming Admin Panel</h1>
     </header>
+    showAdminModal()
 
     <div class="search-bar">
         <input type="text" id="searchBar" placeholder="Search by name or status..." onkeyup="filterTable()">
@@ -208,6 +209,10 @@
                 return;
             }
             updateBooking(id, 'pcs', pcs);
+        }
+
+        function showAdminModal() {
+            document.getElementById('adminModal').style.display = 'flex';
         }
 
         // Update booking on blur
