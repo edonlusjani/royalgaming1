@@ -94,7 +94,8 @@ app.put('/bookings/:id/reject', (req, res) => {
             console.error('Error sending email:', error);
             return res.status(500).json({ message: 'Booking rejected, but email could not be sent.' });
         }
-    res.json({ message: 'Booking rejected successfully.', booking });
+        res.json({ message: 'Booking rejected successfully.', booking });
+    });
 });
 
 // Delete a booking
@@ -112,6 +113,7 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
 // Admin Login Endpoint
 app.post('/admin/config', (req, res) => {
     const { password } = req.body; // Extract password from request body
