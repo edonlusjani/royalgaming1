@@ -59,6 +59,41 @@
             background-color: #007f7f;
         }
 
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background: #1a1a1a;
+            color: #ffffff;
+            box-shadow: 0 0 15px #00ffcc;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #00ffcc;
+        }
+
+        th {
+            background: linear-gradient(145deg, #00ffcc, #007f7f);
+            color: #000;
+            font-size: 1.2em;
+        }
+
+        td {
+            font-size: 1em;
+        }
+
+        td button {
+            padding: 5px 10px;
+            margin: 5px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
         footer {
             text-align: center;
             padding: 15px;
@@ -84,8 +119,25 @@
 
     <!-- Admin Content (Hidden initially) -->
     <div class="admin-content" id="adminContent">
-        <h2>Welcome to the Admin Panel!</h2>
-        <!-- Your admin content goes here -->
+        <h2>Bookings</h2>
+        <table id="bookingTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>PCs</th>
+                    <th>Date</th>
+                    <th>Start Time</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <div id="loading">Loading...</div>
     </div>
 
     <footer>
@@ -106,6 +158,7 @@
                     document.getElementById('loginForm').style.display = 'none';
                     document.getElementById('adminContent').style.display = 'block';
                     localStorage.setItem('isAdminLoggedIn', 'true'); // Optional: Use to keep track of login state
+                    fetchBookings(); // Fetch bookings after successful login
                 } else {
                     document.getElementById('errorMessage').textContent = 'Incorrect password. Please try again.';
                 }
@@ -120,12 +173,87 @@
             if (localStorage.getItem('isAdminLoggedIn') === 'true') {
                 document.getElementById('loginForm').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
+                fetchBookings(); // Fetch bookings if logged in already
             } else {
                 // If not logged in, show the login form
                 document.getElementById('loginForm').style.display = 'block';
             }
 
         });
+
+        // Fetch bookings from the backend
+        async function fetchBookings() {
+            document.getElementById('loading').style.display = 'block';
+            try {
+                const response = await fetch('https://royalgaming1-1.onrender.com/bookings'); // Backend URL
+                const data = await response.json();
+                renderTable(data); // Call the renderTable function with the fetched data
+            } catch (error) {
+                alert('Error fetching bookings. Please try again.');
+                console.error(error);
+            } finally {
+                document.getElementById('loading').style.display = 'none';
+            }
+        }
+
+        // Render bookings in the table
+        function renderTable(bookings) {
+            const tbody = document.querySelector('#bookingTable tbody');
+            tbody.innerHTML = ''; // Clear any existing rows
+            bookings.forEach(booking => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${booking.id}</td>
+                    <td>${booking.name}</td>
+                    <td>${booking.phone}</td>
+                    <td>${booking.email}</td>
+                    <td>${booking.pcs.join(', ')}</td>
+                    <td>${booking.date}</td>
+                    <td>${booking.startTime}</td>
+                    <td>${booking.duration}</td>
+                    <td>${booking.status}</td>
+                    <td>
+                        <button class="approve" onclick="approveBooking(${booking.id})">Approve</button>
+                        <button class="reject" onclick="rejectBooking(${booking.id})">Reject</button>
+                        <button class="delete" onclick="deleteBooking(${booking.id})">Delete</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Approve booking
+        async function approveBooking(id) {
+            try {
+                await fetch(`https://royalgaming1-1.onrender.com/bookings/${id}/approve`, { method: 'PUT' });
+                fetchBookings(); // Refresh bookings after approval
+            } catch (error) {
+                alert('Error approving booking.');
+                console.error(error);
+            }
+        }
+
+        // Reject booking
+        async function rejectBooking(id) {
+            try {
+                await fetch(`https://royalgaming1-1.onrender.com/bookings/${id}/reject`, { method: 'PUT' });
+                fetchBookings(); // Refresh bookings after rejection
+            } catch (error) {
+                alert('Error rejecting booking.');
+                console.error(error);
+            }
+        }
+
+        // Delete booking
+        async function deleteBooking(id) {
+            try {
+                await fetch(`https://royalgaming1-1.onrender.com/bookings/${id}`, { method: 'DELETE' });
+                fetchBookings(); // Refresh bookings after deletion
+            } catch (error) {
+                alert('Error deleting booking.');
+                console.error(error);
+            }
+        }
     </script>
 </body>
 </html>
