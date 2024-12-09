@@ -82,6 +82,18 @@ app.put('/bookings/:id/reject', (req, res) => {
         return res.status(404).json({ message: 'Booking not found.' });
     }
     booking.status = 'Rejected';
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to: booking.email,
+        subject: 'Booking Rejected - RoyalGaming',
+        text: `Hello ${booking.name},\n\nYour booking for PCs ${booking.pcs.join(', ')} on ${booking.date} at ${booking.startTime} for ${booking.duration} hour(s) has been rejected.\n\nThank you for choosing RoyalGaming! Contact us directly for more details`,
+    };
+
+    transporter.sendMail(mailOptions, (error) => {
+        if (error) {
+            console.error('Error sending email:', error);
+            return res.status(500).json({ message: 'Booking rejected, but email could not be sent.' });
+        }
     res.json({ message: 'Booking rejected successfully.', booking });
 });
 
