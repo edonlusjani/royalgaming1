@@ -31,47 +31,6 @@
             margin: 20px;
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            justify-content: center;
-            align-items: center;
-        }
-
-        .modal-content {
-            background: #1a1a1a;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 20px #00ff00;
-            text-align: center;
-            width: 300px;
-        }
-
-        .modal-content input {
-            width: 90%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 2px solid #00ff00;
-            border-radius: 5px;
-            background-color: #1a1a1a;
-            color: #ffffff;
-        }
-
-        .modal-content button {
-            margin-top: 10px;
-            padding: 10px 20px;
-            background: #00ff00;
-            border: none;
-            cursor: pointer;
-            font-size: 1em;
-            border-radius: 5px;
-        }
-
         .search-bar input {
             padding: 10px;
             font-size: 1em;
@@ -172,6 +131,7 @@
             <button onclick="validateAdmin()">Login</button>
         </div>
     </div>
+    showAdminModal()
 
     <div class="search-bar">
         <input type="text" id="searchBar" placeholder="Search by name or status..." onkeyup="filterTable()">
@@ -320,11 +280,8 @@
             renderTable(filtered);
         }
 
-        // Show modal on page load
-        window.onload = function() {
-            showAdminModal();
-            fetchBookings();
-        }
+        // Initialize
+        fetchBookings();
     </script>
 </body>
 </html>
