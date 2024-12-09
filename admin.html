@@ -30,6 +30,7 @@
             justify-content: center;
             margin: 20px;
         }
+
         .modal {
             display: none;
             position: fixed;
@@ -171,7 +172,6 @@
             <button onclick="validateAdmin()">Login</button>
         </div>
     </div>
-    showAdminModal()
 
     <div class="search-bar">
         <input type="text" id="searchBar" placeholder="Search by name or status..." onkeyup="filterTable()">
@@ -320,8 +320,11 @@
             renderTable(filtered);
         }
 
-        // Initialize
-        fetchBookings();
+        // Show modal on page load
+        window.onload = function() {
+            showAdminModal();
+            fetchBookings();
+        }
     </script>
 </body>
 </html>
