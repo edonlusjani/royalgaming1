@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VivaFresh - Offers</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+            background-image: url('background.jpg'); /* Background image */
+            background-size: auto;
+            background-position: center;
+            background-attachment: fixed; /* Keep background fixed */
+        }
+
+        /* Header Section */
+        header {
+            background-color: rgba(255, 77, 77, 0.8); /* Semi-transparent red background */
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap; /* Allows stacking on smaller screens */
+        }
+
+        header .logo {
+            width: 120px;
+            border-radius: 50%;
+        }
+
+        header .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        header .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            padding: 10px;
+            transition: color 0.3s;
+            border-radius: 5px;
+        }
+
+        header .nav-links a:hover {
+            color: #ffcc00;
+            background-color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            justify-content: left;
+            margin-left: 200px;
+            align-items: center;
+            text-align: center;
+            color: black;
+            height: 400px;
+            box-shadow: inset 0px 0px 50px rgba(0, 0, 0, 0.6); /* Dark shadow overlay */
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 40px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .hero p {
+            font-size: 20px;
+            margin: 10px 0;
+        }
+
+        /* Offer Sections */
+        .offers {
+            display: flex;
+            justify-content: space-between;
+            padding: 30px;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .offer {
+            background-color: white;
+            width: 30%;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 2px solid #ff4d4d; /* Red outline for the offer card */
+        }
+
+        .offer:hover {
+            transform: scale(1.05);
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .offer img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .offer h3 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        .offer p {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        /* Footer Section */
+        footer {
+            background-color: #222;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer .social-links a {
+            text-decoration: none;
+            color: white;
+            margin: 0 10px;
+            font-size: 20px;
+        }
+
+        footer .social-links a:hover {
+            color: #ffcc00;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            /* Stack the header items for smaller screens */
+            header {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            header .nav-links {
+                margin-top: 10px;
+                gap: 10px;
+                flex-direction: column;
+            }
+
+            .hero {
+                margin-left: 0;
+                height: 300px;
+            }
+
+            .hero h1 {
+                font-size: 30px;
+            }
+
+            .hero p {
+                font-size: 18px;
+            }
+
+            /* Adjust offer cards for smaller screens */
+            .offers {
+                flex-direction: column;
+                align-items: center;
+                padding: 20px;
+            }
+
+            .offer {
+                width: 80%;
+                margin-bottom: 20px;
+            }
+
+            .offer img {
+                height: 100px;
+            }
+        }
+
+        /* Mobile styles */
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 25px;
+            }
+
+            .hero p {
+                font-size: 16px;
+            }
+
+            footer .social-links a {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header Section -->
+<header>
+    <img src="Logo.png" alt="Viva Fresh Logo" class="logo">
+    <h1 class="title">Viva Fresh MK</h1>
+    <div class="nav-links">
+        <a href="layalty2.html">Loyalty Lists</a>
+        <a href="cenovnik.html">Cenovnici</a>
+        
+    </div>
+</header>
+
+<!-- Hero Section -->
+<div class="hero">
+    <div>
+        <h1>Welcome to VivaFresh!</h1>
+        <p>Fresh Groceries, Amazing Offers, Every Day!</p>
+    </div>
+</div>
+
+<!-- Offer Sections -->
+<div class="offers">
+    <!-- Example offer cards -->
+    <a href="layalty2.html" class="offer">
+        <img src="Lojality.jpg" alt="Offer 1">
+        <h3>Lojality</h3>
+        <p>КАРТИЧКА ИМАЈ - ВАУЧЕР ЗИМАЈ!</p>
+    </a>
+    <a href="Cenovnik.html" class="offer">
+        <img src="cenovnik.png" alt="Offer 2">
+        <h3>Cenovnici</h3>
+        <p>Cenovnici Viva Fresh</p>
+    </a>
+   
+</div>
+
+<!-- Footer Section -->
+<footer>
+    <div>
+        <p>&copy; 2025 Viva Fresh Store MK</p>
+        <p>Visit us: Bulevar Aleksandar Makedonski, Skopje, MK</p>
+    </div>
+    <div class="social-links">
+        <a href="https://www.instagram.com/vivafresh.mk" target="_blank">Instagram</a>
+        <a href="https://www.facebook.com/vivafresh.mk" target="_blank">Facebook</a>
+    </div>
+</footer>
+
+</body>
+</html>

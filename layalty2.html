@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loyalty</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        header {
+            background-color: #d62828;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .Header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .Logo {
+            width: 150px;
+            border-radius: 50%;
+            border: 3px solid #fff;
+        }
+
+        .title {
+            flex: 1;
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+            text-align: center;
+        }
+
+        .Lojality {
+            width: 120px;
+            border: 3px solid #fff;
+            border-radius: 15px;
+        }
+
+        .dropdown-container {
+            margin: 30px auto;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            max-width: 1000px;
+        }
+
+        .dropdown {
+            width: 250px;
+        }
+
+        .btn {
+            background: #d62828;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #a81f1f;
+        }
+
+        .dropdown-content {
+            display: none;
+            background: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 5px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            padding: 12px;
+            text-decoration: none;
+            color: #333;
+            display: block;
+            font-size: 15px;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f4f4f4;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        footer {
+            background-color: #222;
+            color: #eee;
+            padding: 30px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        footer h3 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+
+        footer p, footer a {
+            font-size: 14px;
+            color: #bbb;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #fff;
+        }
+
+        @media (max-width: 600px) {
+            .Header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .Logo {
+                width: 120px;
+            }
+
+            .Lojality {
+                width: 100px;
+                margin-top: 10px;
+            }
+
+            .title {
+                font-size: 22px;
+            }
+
+            .dropdown {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="Header">
+            <img src="Logo.png" alt="VivaFresh Logo" class="Logo">
+            <h1 class="title">КАРТИЧКА ИМАЈ - ВАУЧЕР ЗИМАЈ!</h1>
+            <img src="Lojality.jpg" alt="Lojality" class="Lojality">
+        </div>
+    </header>
+
+    <div class="dropdown-container" id="dropdown-container">
+        <!-- Dynamic content inserted here -->
+    </div>
+
+    <footer>
+        <h3>Контакт Информации</h3>
+        <p>📞 Телефон: <a href="tel:+38970123456">+389 70 123 456</a></p>
+        <p>📧 Email: <a href="mailto:info@vivafresh.mk">info@vivafresh.mk</a></p>
+        <p>📍 Адреса: Ул. Македонија бр. 10, Скопје, Македонија</p>
+        <br>
+        <p>&copy; 2025 Viva Fresh MK. Сите права задржани.</p>
+    </footer>
+
+    <script>
+        async function fetchMarkets() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/markets'); // Replace with your real endpoint
+                const markets = await response.json();
+                const container = document.getElementById('dropdown-container');
+                container.innerHTML = '';
+
+                Object.keys(markets).forEach(city => {
+                    const dropdown = document.createElement('div');
+                    dropdown.classList.add('dropdown');
+
+                    const button = document.createElement('button');
+                    button.classList.add('btn');
+                    button.textContent = city;
+
+                    const dropdownContent = document.createElement('div');
+                    dropdownContent.classList.add('dropdown-content');
+
+                    markets[city].forEach(market => {
+                        const link = document.createElement('a');
+                        link.href = `http://127.0.0.1:5000/pdf/${market.pdf_link}`; // Replace with actual server IP or domain
+                        link.textContent = market.name;
+                        dropdownContent.appendChild(link);
+                    });
+
+                    dropdown.appendChild(button);
+                    dropdown.appendChild(dropdownContent);
+                    container.appendChild(dropdown);
+                });
+            } catch (error) {
+                console.error('Error fetching markets:', error);
+            }
+        }
+
+        window.onload = fetchMarkets;
+    </script>
+</body>
+</html>

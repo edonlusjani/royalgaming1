@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app)  # Enable CORS so your frontend can access this API from a different domain
 
 # FTP credentials
-FTP_HOST = "91.187.123.126"
+FTP_HOST = "192.168.100.50"
 FTP_PORT = 2323
 FTP_USER = "Administrator"
 FTP_PASS = "Pass!@12.VivaKitgo"
@@ -110,7 +110,9 @@ markets = {
     {"name": "Маркет 69", "pdf_link": "Merki_69.pdf"},
     {"name": "Маркет 70", "pdf_link": "Merki_70.pdf"},
     {"name": "Маркет 75", "pdf_link": "Merki_75.pdf"},
-    {"name": "Маркет 76", "pdf_link": "Merki_76.pdf"}
+    {"name": "Маркет 76", "pdf_link": "Merki_76.pdf"},
+    {"name": "Маркет V1", "pdf_link": "Merki_V1.pdf"},
+     {"name": "Маркет V2", "pdf_link": "Merki_V2.pdf"},
   ],
   "Probistip": [
     {"name": "Маркет 58", "pdf_link": "Merki_58.pdf"},
@@ -157,4 +159,4 @@ def serve_pdf(filename):
         abort(404, description="Resource not found")
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

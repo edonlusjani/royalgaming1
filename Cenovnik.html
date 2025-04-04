@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="mk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loyalty</title>
+   
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: left;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: red;
+            padding: 15px;
+        }
+
+        .Header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 10px;
+        }
+
+        .Logo {
+            width: 150px;
+            border-radius: 50px;
+            border: 3px solid white;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            flex-grow: 1;
+        }
+
+        .Lojality {
+            width: 120px;
+            border: 3px solid white;
+            border-radius: 15px;
+        }
+
+        .dropdown-container {
+            margin: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .dropdown {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .btn {
+            background-color: red;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 16px;
+            width: 100%;
+            max-width: 250px;
+        }
+
+        .btn:hover {
+            background-color: darkred;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: relative;
+            width: 100%;
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+            margin-top: 5px;
+            max-width: 250px;
+        }
+
+        .dropdown-content a {
+            padding: 10px;
+            text-decoration: none;
+            display: block;
+            color: black;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .Header {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .Logo {
+                width: 120px;
+            }
+
+            .Lojality {
+                width: 100px;
+            }
+
+            .title {
+                font-size: 20px;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="Header">
+            <img src="Logo.png" alt="VivaFresh Logo" class="Logo">
+            <h1 class="title">Мерки од Влада</h1>
+            <img src="cenovnik.png" alt="Cenovnik" class="Lojality">
+        </div>
+    </header>
+
+    <div class="dropdown-container" id="dropdown-container">
+        <!-- Buttons and dropdowns will be inserted here dynamically -->
+    </div>
+
+    <script>
+        async function fetchMarkets() {
+            try {
+                const response = await fetch('http://127.0.0.1:5000/markets'); // Replace with actual server IP/domain
+                const markets = await response.json();
+                const container = document.getElementById('dropdown-container');
+                container.innerHTML = '';
+
+                Object.keys(markets).forEach(city => {
+                    const dropdown = document.createElement('div');
+                    dropdown.classList.add('dropdown');
+
+                    const button = document.createElement('button');
+                    button.classList.add('btn');
+                    button.textContent = city;
+
+                    const dropdownContent = document.createElement('div');
+                    dropdownContent.classList.add('dropdown-content');
+
+                    markets[city].forEach(market => {
+                        const link = document.createElement('a');
+                        link.href = `http://127.0.0.1:5000/pdf/${market.pdf_link}`; // Adjust server address
+                        link.textContent = market.name;
+                        dropdownContent.appendChild(link);
+                    });
+
+                    dropdown.appendChild(button);
+                    dropdown.appendChild(dropdownContent);
+                    container.appendChild(dropdown);
+                });
+            } catch (error) {
+                console.error('Error fetching markets:', error);
+            }
+        }
+
+        window.onload = fetchMarkets;
+    </script>
+</body>
+</html>
